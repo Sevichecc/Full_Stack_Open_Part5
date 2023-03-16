@@ -6,5 +6,10 @@ const getAll = async () => {
   return response.data;
 };
 
+let token;
+const setToken = (newToken) => {
+  token = `Bearer ${newToken}`;
+};
+
 // eslint-disable-next-line import/no-anonymous-default-export
-export default { getAll };
+export default { getAll, setToken };
