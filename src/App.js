@@ -62,25 +62,44 @@ const App = () => {
     setUser(null)
   }
 
-  const addBlog = (blogObject) => {
-    blogService.create(blogObject).then((returnedObject) => {
-      setBlogs(blogs.concat(returnedObject))
+  const addBlog = async (blogObject) => {
+    try {
+      const newBlog = await blogService.create(blogObject)
+      setBlogs(blogs.concat(newBlog))
       blogFormRef.current.toggleVisbility()
-      notifyWith(
-        `a new blog ${returnedObject.title} by ${returnedObject.author}`
-      )
-    })
+      notifyWith(`a new blog ${newBlog.title} by ${newBlog.author}`)
+    } catch (error) {
+      notifyWith(error.message)
+    }
   }
 
-  const addLike = (blogObject) => {
-    blogService.addLike(blogObject).then((returnedObject) => {
-    const updatedBlogs = blogs.map((blog) =>
-      blog.id === returnedObject.id ? returnedObject : blog
-    )
-    setBlogs(updatedBlogs)
-  })
-}
+  const addLike = async (blogObject) => {
+    try {
+      const response = await blogService.addLike(blogObject)
+      const updatedBlogs = blogs.map((blog) =>
+        blog.id === response.id ? response : blog
+      )
+      setBlogs(updatedBlogs)
+    } catch (error) {
+      notifyWith(error.message)
+    }
+  }
 
+  const removeBlog = async (blogObject) => {
+    try {
+      if (
+        !window.confirm(
+          `Remove blog ${blogObject.title}! by Ron ${blogObject.author}`
+        )
+      )
+        return
+      await blogService.remove(blogObject)
+      const updatedBlog = blogs.filter((blog) => blog.id !== blogObject.id)
+      setBlogs(updatedBlog)
+    } catch (error) {
+      notifyWith(error.message)
+    }
+  }
 
   if (!user) {
     return (
@@ -104,9 +123,16 @@ const App = () => {
       <Togglable buttonLabel='create new blog' ref={blogFormRef}>
         <BlogForm createBlog={addBlog} />
       </Togglable>
-      {blogs.sort((a,b)=> b.likes - a.likes ).map((blog) => (
-        <Blog key={blog.id} blog={blog} handleLike={addLike} />
-      ))}
+      {blogs
+        .sort((a, b) => b.likes - a.likes)
+        .map((blog) => (
+          <Blog
+            key={blog.id}
+            blog={blog}
+            handleLike={addLike}
+            handleRemove={removeBlog}
+          />
+        ))}
     </div>
   )
 }
