@@ -53,7 +53,6 @@ const App = () => {
       setPassword('')
     } catch (error) {
       notifyWith('Wrong username or pass word', 'error')
-      console.log(error)
     }
   }
 
@@ -73,8 +72,8 @@ const App = () => {
     })
   }
 
-const addLike = (blogObject) => {
-  blogService.addLike(blogObject).then((returnedObject) => {
+  const addLike = (blogObject) => {
+    blogService.addLike(blogObject).then((returnedObject) => {
     const updatedBlogs = blogs.map((blog) =>
       blog.id === returnedObject.id ? returnedObject : blog
     )
@@ -105,7 +104,7 @@ const addLike = (blogObject) => {
       <Togglable buttonLabel='create new blog' ref={blogFormRef}>
         <BlogForm createBlog={addBlog} />
       </Togglable>
-      {blogs.map((blog) => (
+      {blogs.sort((a,b)=> b.likes - a.likes ).map((blog) => (
         <Blog key={blog.id} blog={blog} handleLike={addLike} />
       ))}
     </div>

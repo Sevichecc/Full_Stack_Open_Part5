@@ -13,7 +13,7 @@ const Blog = ({ blog,  handleLike }) => {
 
   return (
     <div style={blogStyle}>
-      {blog.title} {blog.author}
+      {blog.title}
       <button onClick={() => setVisibility(!visible)}>
         {visible ? 'hide' : 'view'}
       </button>
