@@ -11,10 +11,9 @@ const mockBlog = {
 }
 test('renders title and author but not url and likes by default', () => {
   render(<Blog blog={mockBlog} />)
-  // Check if title and author are rendered
+
   expect(screen.getByText(mockBlog.title + mockBlog.author)).toBeDefined()
 
-  // Check if url and likes are not rendered by default
   expect(screen.queryByTestId('url')).not.toBeInTheDocument()
   expect(screen.queryByTestId('likes')).not.toBeInTheDocument()
 })
@@ -28,4 +27,16 @@ test('shows url and likes when view button is clicked', async () => {
 
   expect(screen.queryByTestId('url')).toBeDefined()
   expect(screen.queryByTestId('likes')).toBeDefined()
+})
+
+test('the like button is clicked twice, the event handler is called twice', async () => {
+  const handleLike = jest.fn()
+  render(<Blog blog={mockBlog} handleLike={handleLike}/>)
+
+  const user = userEvent.setup()
+  await user.click(screen.getByText('view'))
+  await user.click(screen.getByText('like'))
+  await user.click(screen.getByText('like'))
+
+  expect(handleLike.mock.calls).toHaveLength(2)
 })
