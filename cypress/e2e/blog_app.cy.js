@@ -58,13 +58,20 @@ describe('Blog app', function () {
       beforeEach(function () {
         cy.createBlog({ title: 'the First Blog', author: 'Cat 1', url:'https://cat.one' })
         cy.createBlog({ title: 'the Second Blog', author: 'Cat 2', url:'https://cat.two' })
-        cy.createBlog({ title: 'the First Blog', author: 'Cat 3', url:'https://cat.three' })
+        cy.createBlog({ title: 'the Third Blog', author: 'Cat 3', url:'https://cat.three' })
       })
-      it.only('users can like a blog', function () {
+      it('users can like a blog', function () {
         cy.contains('the Second Blog').parent().as('theBlog')
         cy.get('@theBlog').find('#visibility').click()
         cy.get('@theBlog').find('#like').click()
         cy.get('@theBlog').should('contain', 'likes 1')
+      })
+
+      it('the user who created a blog can delete it', function () {
+        cy.contains('the Second Blog').parent().as('theBlog')
+        cy.get('@theBlog').find('#visibility').click()
+        cy.get('@theBlog').find('#remove').click()
+        cy.get('html').should('not.contain', 'the Second Blog')
       })
     })
   })

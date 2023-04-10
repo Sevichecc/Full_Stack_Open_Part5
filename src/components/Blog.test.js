@@ -14,7 +14,7 @@ describe('<Blog />', () => {
   test('renders title and author but not url and likes by default', () => {
     render(<Blog blog={mockBlog} />)
 
-    expect(screen.getByText(mockBlog.title + mockBlog.author)).toBeDefined()
+    expect(screen.getByText(mockBlog.title)).toBeDefined()
 
     expect(screen.queryByTestId('url')).toBeNull()
     expect(screen.queryByTestId('likes')).toBeNull()
