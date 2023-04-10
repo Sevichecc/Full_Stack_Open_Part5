@@ -12,7 +12,7 @@ const Blog = ({ blog,  handleLike, handleRemove }) => {
   }
 
   const removeBtnStyle = {
-    backgroundColor: "blue",
+    backgroundColor: 'blue',
     color: 'white',
   }
 
@@ -30,7 +30,7 @@ const Blog = ({ blog,  handleLike, handleRemove }) => {
             <button onClick={() => handleLike(blog)}>like</button>
           </div>
           <div>{blog.author}</div>
-          <button style={removeBtnStyle} onClick={()=>handleRemove(blog)}>remove</button>
+          <button style={removeBtnStyle} onClick={() => handleRemove(blog)}>remove</button>
         </div>
       )}
     </div>

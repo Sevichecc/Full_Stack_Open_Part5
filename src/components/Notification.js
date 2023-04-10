@@ -1,6 +1,6 @@
 const Notification = ({ info }) => {
   if (!info.message) {
-    return null;
+    return null
   }
   const style = {
     color: info.type === 'error' ? 'red' : 'green',
@@ -10,13 +10,13 @@ const Notification = ({ info }) => {
     borderRadius: 5,
     padding: 10,
     marginBottom: 10,
-  };
+  }
 
   return (
     <div style={style}>
       <p>{info.message}</p>
     </div>
-  );
-};
+  )
+}
 
-export default Notification;
+export default Notification

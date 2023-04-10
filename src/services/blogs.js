@@ -25,7 +25,7 @@ const addLike = async (blog) => {
   }
   const response = await axios.put(
     `${baseUrl}/${blog.id}`,
-    { ...blog, likes: blog.likes + 1},
+    { ...blog, likes: blog.likes + 1 },
     config
   )
   return response.data
@@ -33,10 +33,10 @@ const addLike = async (blog) => {
 
 const remove = async (blog) => {
   const config = {
-    headers : {Authorization : token}
+    headers : { Authorization : token }
   }
   const response = await axios.delete(`${baseUrl}/${blog.id}`, config)
   return response.data
 }
-// eslint-disable-next-line import/no-anonymous-default-export
+
 export default { getAll, setToken, create, addLike,remove }
