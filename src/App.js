@@ -52,7 +52,7 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (error) {
-      notifyWith('Wrong username or pass word', 'error')
+      notifyWith('Wrong username or password', 'error')
     }
   }
 
