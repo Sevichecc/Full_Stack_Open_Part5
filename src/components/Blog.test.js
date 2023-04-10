@@ -9,34 +9,37 @@ const mockBlog = {
   url: 'https://test-blog.com',
   likes: 5,
 }
-test('renders title and author but not url and likes by default', () => {
-  render(<Blog blog={mockBlog} />)
 
-  expect(screen.getByText(mockBlog.title + mockBlog.author)).toBeDefined()
+describe('<Blog />', () => {
+  test('renders title and author but not url and likes by default', () => {
+    render(<Blog blog={mockBlog} />)
 
-  expect(screen.queryByTestId('url')).not.toBeInTheDocument()
-  expect(screen.queryByTestId('likes')).not.toBeInTheDocument()
-})
+    expect(screen.getByText(mockBlog.title + mockBlog.author)).toBeDefined()
 
-test('shows url and likes when view button is clicked', async () => {
-  render(<Blog blog={mockBlog} />)
+    expect(screen.queryByTestId('url')).toBeNull()
+    expect(screen.queryByTestId('likes')).toBeNull()
+  })
 
-  const user = userEvent.setup()
-  const button = screen.getByText('view')
-  await user.click(button)
+  test('shows url and likes when view button is clicked', async () => {
+    render(<Blog blog={mockBlog} />)
 
-  expect(screen.queryByTestId('url')).toBeDefined()
-  expect(screen.queryByTestId('likes')).toBeDefined()
-})
+    const user = userEvent.setup()
+    const button = screen.getByText('view')
+    await user.click(button)
 
-test('the like button is clicked twice, the event handler is called twice', async () => {
-  const handleLike = jest.fn()
-  render(<Blog blog={mockBlog} handleLike={handleLike}/>)
+    expect(screen.queryByTestId('url')).toBeDefined()
+    expect(screen.queryByTestId('likes')).toBeDefined()
+  })
 
-  const user = userEvent.setup()
-  await user.click(screen.getByText('view'))
-  await user.click(screen.getByText('like'))
-  await user.click(screen.getByText('like'))
+  test('the like button is clicked twice, the event handler is called twice', async () => {
+    const handleLike = jest.fn()
+    render(<Blog blog={mockBlog} handleLike={handleLike} />)
 
-  expect(handleLike.mock.calls).toHaveLength(2)
+    const user = userEvent.setup()
+    await user.click(screen.getByText('view'))
+    await user.click(screen.getByText('like'))
+    await user.click(screen.getByText('like'))
+
+    expect(handleLike.mock.calls).toHaveLength(2)
+  })
 })
