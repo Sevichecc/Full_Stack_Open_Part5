@@ -1,13 +1,13 @@
 describe('Blog app', function () {
   beforeEach(function () {
-    cy.request('POST', 'http://localhost:3003/api/testing/reset')
-    cy.visit('http://localhost:3000')
+    cy.visit('')
+    cy.request('POST', `${Cypress.env('BACKEND')}/testing/reset`)
     const user = {
       name: 'cat',
       username: 'cat',
       password: '123456',
     }
-    cy.request('POST', 'http://localhost:3003/api/users', user)
+    cy.request('POST', `${Cypress.env('BACKEND')}/users`, user)
   })
 
   it('Login form is shown', function () {
@@ -26,7 +26,7 @@ describe('Blog app', function () {
       cy.contains('cat logged in')
     })
 
-    it.only('fails with wrong credentials', function () {
+    it('fails with wrong credentials', function () {
       cy.get('#username').type('cat')
       cy.get('#password').type('wrong')
       cy.get('#login-button').click()
@@ -37,6 +37,21 @@ describe('Blog app', function () {
         .and('have.css', 'border-style', 'solid')
 
       cy.get('html').should('not.contain', 'cat logged in')
+    })
+  })
+
+  describe('When logged in', function () {
+    beforeEach(function () {
+      cy.login(({ username: 'cat', password:'123456' }))
+    })
+
+    it('A blog can be created', function () {
+      cy.contains('create new blog').click()
+      cy.get('#blogtitle').type('First Blog')
+      cy.get('#blogauthor').type('Cat')
+      cy.get('#blogurl').type('https://test.cat')
+      cy.get('#create').click()
+      cy.contains('a new blog First Blog by Cat')
     })
   })
 })
