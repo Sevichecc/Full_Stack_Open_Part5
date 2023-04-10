@@ -1,13 +1,21 @@
+const user1 = {
+  name: 'cat',
+  username: 'cat',
+  password: '123456',
+}
+
+const user2 = {
+  name: 'dog',
+  username: 'dog',
+  password: '123456',
+}
+
 describe('Blog app', function () {
   beforeEach(function () {
     cy.visit('')
     cy.request('POST', `${Cypress.env('BACKEND')}/testing/reset`)
-    const user = {
-      name: 'cat',
-      username: 'cat',
-      password: '123456',
-    }
-    cy.request('POST', `${Cypress.env('BACKEND')}/users`, user)
+    cy.request('POST', `${Cypress.env('BACKEND')}/users`, user1)
+    cy.request('POST', `${Cypress.env('BACKEND')}/users`, user2)
   })
 
   it('Login form is shown', function () {
@@ -42,7 +50,7 @@ describe('Blog app', function () {
 
   describe('When logged in', function () {
     beforeEach(function () {
-      cy.login(({ username: 'cat', password:'123456' }))
+      cy.login({ username: user1.username, password: user1.password })
     })
 
     it('A blog can be created', function () {
@@ -56,9 +64,21 @@ describe('Blog app', function () {
 
     describe('and several blog exist', function () {
       beforeEach(function () {
-        cy.createBlog({ title: 'the First Blog', author: 'Cat 1', url:'https://cat.one' })
-        cy.createBlog({ title: 'the Second Blog', author: 'Cat 2', url:'https://cat.two' })
-        cy.createBlog({ title: 'the Third Blog', author: 'Cat 3', url:'https://cat.three' })
+        cy.createBlog({
+          title: 'the First Blog',
+          author: 'Cat 1',
+          url: 'https://cat.one',
+        })
+        cy.createBlog({
+          title: 'the Second Blog',
+          author: 'Cat 2',
+          url: 'https://cat.two',
+        })
+        cy.createBlog({
+          title: 'the Third Blog',
+          author: 'Cat 3',
+          url: 'https://cat.three',
+        })
       })
       it('users can like a blog', function () {
         cy.contains('the Second Blog').parent().as('theBlog')
@@ -67,11 +87,18 @@ describe('Blog app', function () {
         cy.get('@theBlog').should('contain', 'likes 1')
       })
 
-      it('the user who created a blog can delete it', function () {
+      it('user can delete it', function () {
         cy.contains('the Second Blog').parent().as('theBlog')
         cy.get('@theBlog').find('#visibility').click()
         cy.get('@theBlog').find('#remove').click()
         cy.get('html').should('not.contain', 'the Second Blog')
+      })
+      it.only('log in with other useraccount, cannot see the remove button', function () {
+        cy.contains('logout').click()
+        cy.login({ username: user2.username, password: user2.password })
+        cy.get('html').should('not.contain', 'the First Blog')
+        cy.get('html').should('not.contain', 'the Second Blog')
+        cy.get('html').should('not.contain', 'the Third Blog')
       })
     })
   })
