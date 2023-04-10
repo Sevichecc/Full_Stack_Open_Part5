@@ -93,13 +93,43 @@ describe('Blog app', function () {
         cy.get('@theBlog').find('#remove').click()
         cy.get('html').should('not.contain', 'the Second Blog')
       })
-      it.only('log in with other useraccount, cannot see the remove button', function () {
+      it('log in with other useraccount, cannot see the remove button', function () {
         cy.contains('logout').click()
         cy.login({ username: user2.username, password: user2.password })
         cy.get('html').should('not.contain', 'the First Blog')
         cy.get('html').should('not.contain', 'the Second Blog')
         cy.get('html').should('not.contain', 'the Third Blog')
       })
+    })
+
+    it.only('the blogs are ordered according to likes', function () {
+      cy.createBlog({
+        title: 'The title with the most likes',
+        author: 'Cat 1',
+        url: 'https://cat.one',
+      })
+      cy.createBlog({
+        title: 'The title with the second most likes',
+        author: 'Cat 2',
+        url: 'https://cat.two',
+      })
+
+      cy.contains('The title with the second most likes')
+        .parent()
+        .as('theSecondBlog')
+      cy.get('@theSecondBlog').find('#visibility').click()
+      cy.get('@theSecondBlog').find('#like').click()
+
+      cy.contains('The title with the most likes').parent().as('theMostBlog')
+      cy.get('@theMostBlog').find('#visibility').click()
+      cy.get('@theMostBlog').find('#like').click()
+      cy.wait(1000)
+      cy.get('@theMostBlog').find('#like').click()
+
+      cy.get('.blog').eq(0).should('contain', 'The title with the most likes')
+      cy.get('.blog')
+        .eq(1)
+        .should('contain', 'The title with the second most likes')
     })
   })
 })
