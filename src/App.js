@@ -131,6 +131,7 @@ const App = () => {
             blog={blog}
             handleLike={addLike}
             handleRemove={removeBlog}
+            canRemove={user && blog.user.username === user.username}
           />
         ))}
     </div>

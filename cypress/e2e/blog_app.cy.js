@@ -96,13 +96,14 @@ describe('Blog app', function () {
       it('log in with other useraccount, cannot see the remove button', function () {
         cy.contains('logout').click()
         cy.login({ username: user2.username, password: user2.password })
-        cy.get('html').should('not.contain', 'the First Blog')
-        cy.get('html').should('not.contain', 'the Second Blog')
-        cy.get('html').should('not.contain', 'the Third Blog')
+
+        cy.contains('the First Blog').parent().as('theBlog')
+        cy.get('@theBlog').find('#visibility').click()
+        cy.get('@theBlog').find('#remove').should('not.exist')
       })
     })
 
-    it.only('the blogs are ordered according to likes', function () {
+    it('the blogs are ordered according to likes', function () {
       cy.createBlog({
         title: 'The title with the most likes',
         author: 'Cat 1',

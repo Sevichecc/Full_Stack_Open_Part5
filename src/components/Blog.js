@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-const Blog = ({ blog,  handleLike, handleRemove }) => {
+const Blog = ({ blog, handleLike, handleRemove, canRemove }) => {
   const [visible, setVisibility] = useState(false)
 
   const removeBtnStyle = {
@@ -26,13 +26,15 @@ const Blog = ({ blog,  handleLike, handleRemove }) => {
             </button>
           </div>
           <div>{blog.author}</div>
-          <button
-            id='remove'
-            style={removeBtnStyle}
-            onClick={() => handleRemove(blog)}
-          >
-            remove
-          </button>
+          {canRemove && (
+            <button
+              id='remove'
+              style={removeBtnStyle}
+              onClick={() => handleRemove(blog)}
+            >
+              delelte
+            </button>
+          )}
         </div>
       )}
     </div>
